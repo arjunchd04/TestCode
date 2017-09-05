@@ -1,0 +1,21 @@
+
+@Entity
+@Table(name = "purchaseOrder")
+@NamedEntityGraph(name = "graph.Order.items", 
+               attributeNodes = @NamedAttributeNode(value = "items", subgraph = "items"), 
+               subgraphs = @NamedSubgraph(name = "items", attributeNodes = @NamedAttributeNode("product")))
+public class Order implements Serializable {
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.AUTO)
+   @Column(name = "id", updatable = false, nullable = false)
+   private Long id = null;
+   @Version
+   @Column(name = "version")
+   private int version = 0;
+
+   @Column
+   private String orderNumber;
+
+   @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+   private Set<OrderItem> items = new HashSet<OrderItem>();
